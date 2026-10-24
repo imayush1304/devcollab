@@ -13,11 +13,15 @@ export const AppLayout = () => {
   const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
   const [createTaskOpen, setCreateTaskOpen] = useState(false);
   const [notificationTaskId, setNotificationTaskId] = useState(null);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-[#07090e] text-gray-200 overflow-hidden">
-      {/* Collapsible Left Sidebar */}
-      <Sidebar />
+      {/* Sidebar (Desktop permanent + Mobile slide-over drawer) */}
+      <Sidebar
+        isOpen={mobileSidebarOpen}
+        onClose={() => setMobileSidebarOpen(false)}
+      />
 
       {/* Main Content Area */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
@@ -25,9 +29,10 @@ export const AppLayout = () => {
           onOpenCreateWorkspace={() => setCreateWorkspaceOpen(true)}
           onOpenCreateTask={() => setCreateTaskOpen(true)}
           onSelectNotificationTask={(taskId) => setNotificationTaskId(taskId)}
+          onToggleMobileMenu={() => setMobileSidebarOpen((prev) => !prev)}
         />
 
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-5 md:p-6">
           <Outlet />
         </main>
       </div>

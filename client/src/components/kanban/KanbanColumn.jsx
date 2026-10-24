@@ -35,7 +35,7 @@ export const KanbanColumn = ({
   const theme = columnThemes[id] || columnThemes.TODO;
 
   return (
-    <div className="flex flex-col w-80 shrink-0 bg-[#0c101b] border border-gray-800/80 rounded-2xl h-[calc(100vh-14rem)] overflow-hidden shadow-lg">
+    <div className="flex flex-col w-[85vw] max-w-[320px] sm:w-80 shrink-0 snap-center bg-[#0c101b] border border-gray-800/80 rounded-2xl h-[calc(100vh-16rem)] sm:h-[calc(100vh-14rem)] overflow-hidden shadow-lg">
       {/* Column Header */}
       <div className="px-4 py-3 border-b border-gray-800/70 flex items-center justify-between bg-[#0e1322]">
         <div className="flex items-center space-x-2">

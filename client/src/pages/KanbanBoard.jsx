@@ -3,6 +3,7 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   closestCorners
@@ -43,11 +44,17 @@ export const KanbanBoard = () => {
   const [activeDragTask, setActiveDragTask] = useState(null);
   const [errorToast, setErrorToast] = useState('');
 
-  // Sensors for drag-and-drop
+  // Sensors for drag-and-drop (Calibrated for desktop mouse and mobile touch screens)
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5 // 5px drag distance before activating to preserve clicks
+        distance: 6 // 6px drag distance before activating to preserve clicks
+      }
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200, // 200ms touch press before drag starts so standard mobile page scrolling is smooth
+        tolerance: 6
       }
     })
   );
@@ -256,15 +263,15 @@ export const KanbanBoard = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Top Filter and Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-5 pb-4 border-b border-gray-800/80">
-        <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-800/80">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
           {/* Project Switcher */}
-          <div className="flex items-center space-x-2 bg-gray-900/80 border border-gray-800 rounded-xl px-3 py-1.5 text-xs">
-            <FolderKanban className="w-4 h-4 text-indigo-400" />
+          <div className="flex items-center space-x-2 bg-gray-900/80 border border-gray-800 rounded-xl px-2.5 sm:px-3 py-1.5 text-xs">
+            <FolderKanban className="w-4 h-4 text-indigo-400 shrink-0" />
             <select
               value={selectedProjectId}
               onChange={(e) => setSelectedProjectId(e.target.value)}
-              className="bg-transparent text-gray-200 font-semibold focus:outline-none cursor-pointer"
+              className="bg-transparent text-gray-200 font-semibold focus:outline-none cursor-pointer max-w-[120px] sm:max-w-none truncate"
             >
               {projects.map((p) => (
                 <option key={p._id} value={p._id} className="bg-[#0f1422] text-gray-200">
@@ -275,14 +282,14 @@ export const KanbanBoard = () => {
           </div>
 
           {/* Search Box */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-initial">
             <Search className="w-3.5 h-3.5 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search tasks..."
-              className="bg-[#131828] border border-gray-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-44 sm:w-56"
+              className="bg-[#131828] border border-gray-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-full sm:w-56"
             />
           </div>
 
@@ -360,8 +367,8 @@ export const KanbanBoard = () => {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex-1 overflow-x-auto pb-4">
-            <div className="flex items-start space-x-6 min-w-max">
+          <div className="flex-1 overflow-x-auto pb-4 snap-x snap-mandatory scroll-smooth">
+            <div className="flex items-start space-x-4 sm:space-x-6 min-w-max pb-2">
               <KanbanColumn
                 id="TODO"
                 title="To Do"

@@ -59,7 +59,7 @@ export const Members = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-gray-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-800/80">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight">Workspace Members</h1>
           <p className="text-xs text-gray-400 mt-0.5">

@@ -64,7 +64,7 @@ export const NotificationDropdown = ({
   };
 
   return (
-    <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-[#0f1422] border border-gray-800 shadow-2xl shadow-black/60 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] sm:w-96 max-w-sm rounded-2xl bg-[#0f1422] border border-gray-800 shadow-2xl shadow-black/60 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
       {/* Header */}
       <div className="p-3.5 border-b border-gray-800/80 bg-gray-900/40 flex items-center justify-between">
         <div className="flex items-center space-x-2">

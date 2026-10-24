@@ -15,10 +15,16 @@ import {
   ShieldAlert,
   Sparkles,
   Radio,
-  Bell
+  Bell,
+  Menu
 } from 'lucide-react';
 
-export const Navbar = ({ onOpenCreateWorkspace, onOpenCreateTask, onSelectNotificationTask }) => {
+export const Navbar = ({
+  onOpenCreateWorkspace,
+  onOpenCreateTask,
+  onSelectNotificationTask,
+  onToggleMobileMenu
+}) => {
   const { user, logout } = useAuth();
   const {
     workspaces,
@@ -117,21 +123,34 @@ export const Navbar = ({ onOpenCreateWorkspace, onOpenCreateTask, onSelectNotifi
 
   return (
     <header className="h-14 border-b border-gray-800/80 bg-[#0c101a]/80 backdrop-blur-md sticky top-0 z-40 px-4 flex items-center justify-between">
-      {/* Left: Workspace Switcher */}
-      <div className="flex items-center space-x-3">
+      {/* Left: Mobile Menu Toggle + Workspace Switcher */}
+      <div className="flex items-center space-x-2 sm:space-x-3">
+        {/* Mobile Hamburger Drawer Trigger */}
+        <button
+          onClick={onToggleMobileMenu}
+          className="md:hidden p-1.5 rounded-xl bg-gray-900/80 hover:bg-gray-800 border border-gray-800 text-gray-400 hover:text-white transition-colors cursor-pointer"
+          aria-label="Toggle Navigation Menu"
+        >
+          <Menu className="w-4 h-4" />
+        </button>
+
         <div className="relative" ref={wsDropdownRef}>
           <button
             onClick={() => setWorkspaceDropdownOpen(!workspaceDropdownOpen)}
-            className="flex items-center space-x-2.5 px-3 py-1.5 rounded-xl bg-gray-900/80 hover:bg-gray-800/80 border border-gray-800 text-sm font-medium text-gray-200 transition-all cursor-pointer"
+            className="flex items-center space-x-2 sm:space-x-2.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gray-900/80 hover:bg-gray-800/80 border border-gray-800 text-sm font-medium text-gray-200 transition-all cursor-pointer"
           >
-            <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-[11px] font-bold">
+            <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-[11px] font-bold shrink-0">
               {currentWorkspace?.name ? currentWorkspace.name.charAt(0).toUpperCase() : 'W'}
             </div>
-            <span className="max-w-[150px] truncate text-xs sm:text-sm font-semibold">
-              {currentWorkspace?.name || 'Select Workspace'}
+            <span className="max-w-[90px] sm:max-w-[150px] truncate text-xs sm:text-sm font-semibold">
+              {currentWorkspace?.name || 'Workspace'}
             </span>
-            {currentRole && <RoleBadge role={currentRole} />}
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            {currentRole && (
+              <div className="hidden sm:inline-flex">
+                <RoleBadge role={currentRole} />
+              </div>
+            )}
+            <ChevronDown className="w-3.5 h-3.5 text-gray-400 shrink-0" />
           </button>
 
           {/* Switcher Dropdown Menu */}
