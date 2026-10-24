@@ -1,11 +1,29 @@
 # 🚀 DevCollab — Enterprise Collaborative Project & Task Management Platform
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-success?style=for-the-badge&logo=vercel)](https://devcollab-ten-black.vercel.app)
+[![API Status](https://img.shields.io/badge/API-Render%20Online-informational?style=for-the-badge&logo=render)](https://devcollab-8zpg.onrender.com/api/health)
 [![CI / Tests](https://img.shields.io/badge/Tests-80%2F80%20Passing-brightgreen?style=for-the-badge&logo=jest)](https://github.com/imayush1304/devcollab)
 [![Tech Stack](https://img.shields.io/badge/Stack-MERN%20%2B%20Socket.IO-61DAFB?style=for-the-badge&logo=react)](https://github.com/imayush1304/devcollab)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://github.com/imayush1304/devcollab)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 > A modern, real-time, multi-tenant project management SaaS inspired by **Linear**, **Jira**, and **Trello**. Built with high-throughput Express 5, React 19, MongoDB Atlas, and bidirectional Socket.IO WebSockets. Engineered with zero-trust RBAC, Optimistic Concurrency Control (OCC), glassmorphic design, and 80+ automated tests.
+
+---
+
+### 🌐 Live Production Deployment
+
+| Service | Live URL | Hosting |
+|---|---|---|
+| **Frontend Web App** | **[https://devcollab-ten-black.vercel.app](https://devcollab-ten-black.vercel.app)** | Vercel (Global Edge Network) |
+| **Backend REST & WebSockets** | **[https://devcollab-8zpg.onrender.com](https://devcollab-8zpg.onrender.com)** | Render (Node.js Cloud Service) |
+| **API Health Diagnostics** | **[https://devcollab-8zpg.onrender.com/api/health](https://devcollab-8zpg.onrender.com/api/health)** | Live Atlas Connected |
+
+#### 🔑 One-Click Recruiter Demo Logins:
+The live login screen includes one-click instant login buttons with zero typing required:
+- 👑 **Admin**: `ayush@example.com` / `Password123!` *(Full workspace, project, and RBAC control)*
+- 💻 **Member**: `sarah.dev@example.com` / `Password123!` *(Kanban drag-and-drop, task creation, comments)*
+- 👁️ **Viewer**: `alex.viewer@example.com` / `Password123!` *(Read-only board and activity feed)*
 
 ---
 
