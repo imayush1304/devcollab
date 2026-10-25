@@ -6,3 +6,6 @@ export { Task, TASK_STATUS, TASK_PRIORITY } from './Task.js';
 export { Comment } from './Comment.js';
 export { Activity, ACTIVITY_ENTITY, ACTIVITY_ACTION } from './Activity.js';
 export { Notification, NOTIFICATION_TYPE } from './Notification.js';
+export { Conversation, CONVERSATION_TYPE } from './Conversation.js';
+export { Message } from './Message.js';
+export { ConversationReadState } from './ConversationReadState.js';

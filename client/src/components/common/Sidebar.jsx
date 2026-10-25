@@ -5,6 +5,7 @@ import {
   Kanban,
   FolderKanban,
   Users,
+  MessageSquare,
   Sparkles,
   ShieldCheck,
   X
@@ -18,6 +19,7 @@ export const Sidebar = ({ isOpen = false, onClose = () => {} }) => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Kanban Board', path: '/kanban', icon: Kanban },
     { name: 'Projects', path: '/projects', icon: FolderKanban },
+    { name: 'Messages', path: '/messages', icon: MessageSquare },
     { name: 'Members', path: '/members', icon: Users }
   ];
 

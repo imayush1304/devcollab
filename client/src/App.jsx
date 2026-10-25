@@ -12,6 +12,7 @@ import { Dashboard } from './pages/Dashboard';
 import { KanbanBoard } from './pages/KanbanBoard';
 import { Projects } from './pages/Projects';
 import { Members } from './pages/Members';
+import { Messages } from './pages/Messages';
 
 export function App() {
   return (
@@ -51,6 +52,8 @@ export function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/kanban" element={<KanbanBoard />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:conversationId" element={<Messages />} />
             <Route path="/members" element={<Members />} />
           </Route>
 

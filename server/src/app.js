@@ -13,6 +13,7 @@ import workspaceRoutes from './routes/workspace.routes.js';
 import projectRoutes from './routes/project.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
+import conversationRoutes from './routes/conversation.routes.js';
 
 const app = express();
 
@@ -94,6 +95,7 @@ app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/conversations', conversationRoutes);
 
 // 404 Route Handler
 app.use((req, res) => {

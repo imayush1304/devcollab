@@ -2,7 +2,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-success?style=for-the-badge&logo=vercel)](https://devcollab-ten-black.vercel.app)
 [![API Status](https://img.shields.io/badge/API-Render%20Online-informational?style=for-the-badge&logo=render)](https://devcollab-8zpg.onrender.com/api/health)
-[![CI / Tests](https://img.shields.io/badge/Tests-80%2F80%20Passing-brightgreen?style=for-the-badge&logo=jest)](https://github.com/imayush1304/devcollab)
+[![CI / Tests](https://img.shields.io/badge/Tests-93%2F93%20Passing-brightgreen?style=for-the-badge&logo=jest)](https://github.com/imayush1304/devcollab)
 [![Tech Stack](https://img.shields.io/badge/Stack-MERN%20%2B%20Socket.IO-61DAFB?style=for-the-badge&logo=react)](https://github.com/imayush1304/devcollab)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)](https://github.com/imayush1304/devcollab)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
@@ -288,6 +288,48 @@ All protected endpoints require a valid JWT Bearer token or HttpOnly cookie.
 | `GET` | `/tasks/:taskId/comments` | Fetch threaded comments on task | Viewer+ |
 | `POST` | `/tasks/:taskId/comments` | Add comment & notify assignee | Member+ |
 
+### Real-Time Messaging & Conversations (`/api/conversations`)
+| Method | Endpoint | Description | Access |
+|---|---|---|---|
+| `GET` | `/` | List conversations for user in workspace (with unread counts) | Workspace Member |
+| `POST` | `/direct` | Find or concurrency-safely create direct conversation | Workspace Member |
+| `GET` | `/project/:projectId` | Find or auto-provision project channel | Workspace Member |
+| `GET` | `/:id` | Get conversation details and participants | Participant / Member |
+| `GET` | `/:id/messages` | Cursor-based paginated message history (`?cursor=&limit=`) | Participant / Member |
+| `POST` | `/:id/messages` | Send message (REST fallback & persistence) | Participant / Member |
+| `POST` | `/:id/read` | Mark conversation as read and reset unread count | Participant / Member |
+| `GET` | `/:id/unread-count` | Get unread message count for conversation | Participant / Member |
+
+---
+
+## ⚡ Phase 2: Real-Time Messaging & Presence Architecture
+
+DevCollab Phase 2 introduces a high-throughput, modular monolithic real-time messaging engine built directly into the unified backend and frontend without external microservices or Redis dependencies.
+
+### 1. Conversation Types & Partitioning
+- **Project Channels (`PROJECT`)**: Automatically mapped 1-to-1 to workspace projects. Any authorized workspace member can join and collaborate in project channel discussions.
+- **Direct Messages (`DIRECT`)**: Secure 1-to-1 private messaging between eligible workspace members. Enforced by unique compound indexes preventing duplicate direct conversations under high-concurrency race conditions.
+
+### 2. Socket.IO Real-Time Event Contract
+
+#### Client-to-Server Events:
+- `conversation:join` (`{ conversationId }`): Authenticates socket, verifies workspace and participant authorization, joins room `conversation:<id>`.
+- `conversation:leave` (`{ conversationId }`): Unsubscribes socket from conversation room.
+- `message:send` (`{ conversationId, content, tempId }`): Validates content, derives sender identity from verified JWT, persists to MongoDB, updates conversation `lastMessageAt`, and broadcasts to other room participants. Acknowledges sender with `{ success: true, message, tempId }`.
+- `conversation:read` (`{ conversationId }`): Upserts `ConversationReadState` and updates unread badge across user's active devices.
+
+#### Server-to-Client Events:
+- `message:new` (`message`): Broadcasts new message to conversation room (excluding sender to prevent duplicate echo).
+- `conversation:updated` (`{ conversationId, lastMessageAt, lastMessage }`): Broadcasts snippet update to workspace room for real-time sidebar ordering.
+- `conversation:unread-updated` (`{ conversationId, unreadCount }`): Syncs unread counters.
+- `presence:updated` (`{ userId, status: 'online' | 'offline' }`): Broadcasts user status transitions within workspace rooms.
+
+### 3. Ephemeral Multi-Connection Presence Tracking
+- Tracks multiple active socket connections per user across separate tabs/devices in an in-memory registry (`Map<userId, Set<socketId>>`).
+- Closing one tab leaves the user marked **Online** as long as another tab remains open.
+- Cleans up state immediately upon complete disconnection and broadcasts status only within authorized workspace boundaries.
+- **Architectural Note**: This single-instance design maintains ultra-fast in-memory lookups with zero operational cost. In a multi-node horizontal deployment, a Redis adapter (`@socket.io/redis-adapter`) would be introduced for distributed socket pub/sub.
+
 ---
 
 ## 🔒 Security & RBAC Architecture
@@ -384,7 +426,7 @@ docker-compose up --build -d
 
 ## 🧪 Automated Testing Suite
 
-The codebase features an exhaustive **80-test automated suite** covering unit, integration, edge cases, and concurrency:
+The codebase features an exhaustive **93-test automated suite** covering unit, integration, edge cases, real-time WebSockets, and concurrency:
 
 ```bash
 cd server
@@ -396,10 +438,12 @@ npm test
 - `auth.test.js`: Registration, login, JWT issuance, password hashing (12 tests)
 - `workspace.test.js`: Multi-tenancy, member invitation, slug generation (10 tests)
 - `project_task.test.js`: Project hierarchy, task lifecycle, priority sorting (10 tests)
-- `comment_activity.test.js`: Audit trail, real-time comment authoring (9 tests)
-- `socket.test.js`: WebSocket handshake, room isolation, event emitting (6 tests)
+- `comment_activity.test.js`: Audit trail, real-time comment authoring (14 tests)
+- `socket.test.js`: WebSocket handshake, room isolation, task/comment broadcasts (6 tests)
 - `notification.test.js`: In-app notification creation, unread count, read-all (9 tests)
-- `edge_cases.test.js`: Concurrency conflicts, duplicate slugs, invalid IDs, RBAC escalation attempts (21 tests)
+- `edge_cases.test.js`: Concurrency conflicts, duplicate slugs, invalid IDs, RBAC escalation attempts (16 tests)
+- `conversation.test.js`: Phase 2 messaging REST endpoints, cursor pagination, duplicate DM prevention under concurrency, unread counts (8 tests)
+- `messaging_socket.test.js`: Phase 2 real-time messaging, room authorization, non-echo broadcast, multi-connection presence tracking, reconnection message loading (5 tests)
 
 ---
 
